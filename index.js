@@ -3,6 +3,14 @@ import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '
 import { SlashCommandParser } from '../../../slash-commands/SlashCommandParser.js';
 import { isFalseBoolean } from '../../../utils.js';
 
+function customSortComparitor(a, b) {
+    if (typeof a != typeof b) {
+        a = typeof a;
+        b = typeof b;
+    }
+    return a > b ? 1 : a < b ? -1 : 0;
+}
+
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'sort',
     callback: (args, value) => {
         let list;
@@ -19,13 +27,13 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'sort',
         }
         if (Array.isArray(list)) {
             // always sort lists by value
-            list.sort()
+            list.sort(customSortComparitor)
         } else if (typeof list == 'object') {
             let keysort = args.keysort;
             if (isFalseBoolean(keysort)) {
-              list = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
+              list = Object.keys(list).sort(function(a,b){return customSortComparitor(list[a],list[b])});
             } else {
-              list = Object.keys(list).sort();
+              list = Object.keys(list).sort(customSortComparitor);
             }
         }
         return JSON.stringify(list);

@@ -1,7 +1,7 @@
 import { SlashCommand } from '../../../slash-commands/SlashCommand.js';
 import { ARGUMENT_TYPE, SlashCommandArgument, SlashCommandNamedArgument } from '../../../slash-commands/SlashCommandArgument.js';
 import { SlashCommandParser } from '../../../slash-commands/SlashCommandParser.js';
-import { isTrueBoolean } from '../../../utils.js';
+import { isFalseBoolean } from '../../../utils.js';
 
 SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'sort',
     callback: (args, value) => {
@@ -22,12 +22,10 @@ SlashCommandParser.addCommandObject(SlashCommand.fromProps({ name: 'sort',
             list.sort()
         } else if (typeof list == 'object') {
             let keysort = args.keysort;
-            try { keysort = isTrueBoolean(keysort); } catch { /*empty*/ }
-            let keylist;
-            if (keysort) {
-                list = Object.keys(list).sort();
+            if (isFalseBoolean(keysort)) {
+              list = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
             } else {
-                list = Object.keys(list).sort(function(a,b){return list[a]-list[b]});
+              list = Object.keys(list).sort();
             }
         }
         return JSON.stringify(list);

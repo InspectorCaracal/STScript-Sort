@@ -16,3 +16,7 @@ When sorting a dictionary, this command returns a list of keys, representing the
 
     /sort keysort=false {"a": 1, "d": 3, "c": 2, "b": 5}
     returns ["a", "c", "d", "b"]
+
+### Todo
+
+- Add a command supporting custom sort closures
